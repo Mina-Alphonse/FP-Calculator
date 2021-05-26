@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fp_calculator/ComplexityFactors/ComplexityFactors.dart';
 import 'package:fp_calculator/FunctionPoint.dart';
 import 'package:fp_calculator/FunctionalUnits/ExternalInputs.dart';
 import 'package:fp_calculator/FunctionalUnits/ExternalInquiry.dart';
@@ -62,7 +63,7 @@ class _UFPState extends State<UFP> {
                     backgroundColor: Colors.black,
                   ),
                   child: OutlineButton(
-                    child: Text("Add UFP", style: TextStyle(fontSize: 20.0,color: Colors.blue),),
+                    child: Text("Calculate UFP", style: TextStyle(fontSize: 20.0,color: Colors.blue),),
                     highlightedBorderColor: Colors.blue,
                     // shape: RoundedRectangleBorder(
                     //
@@ -70,7 +71,23 @@ class _UFPState extends State<UFP> {
                     onPressed: () {
                       setState(() {
                         fp.ufp = fp.calculateUFP(fp.simple, fp.average,fp.complex);
+                        return showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text(''),
+                            content: Text('Value of UFP is ${fp.ufp}'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
                       });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ComplexityFactors(fp: fp,)));
                     },
                   ),
                 ),

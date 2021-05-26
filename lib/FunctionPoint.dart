@@ -1,6 +1,6 @@
 class FunctionPoint {
 
-  double tcf ;
+  double tcf,fp ;
   int ufp;
 
   List<Map> functionUnits = [
@@ -16,7 +16,9 @@ class FunctionPoint {
 
   final Map functionalUnits = {};
 
+  //Complexity Factors ratings & number of factors for every rating
   Map factorRating = {'incidental':1, 'moderate':2, 'average':3, 'significant':4, 'essential':5};
+  List<int> ratedFactors = [0,0,0,0,0];
 
   int calculateUFP(List<int> simple ,List<int> average, List<int> complex){
 
