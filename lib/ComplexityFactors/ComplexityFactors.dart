@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 import '../FunctionPoint.dart';
 
 class ComplexityFactors extends StatefulWidget {
@@ -14,7 +15,7 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
   FunctionPoint fp = FunctionPoint();
   _ComplexityFactorsState(fp);
   String factor;
-  bool allFactorsflag = true, resetFlag = true;
+  bool allFactorsflag = true;
 
 
   void factorHandler(String val)
@@ -23,6 +24,7 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
       factor = val;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +44,7 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                 DropdownButton(
                   onChanged: (val) {
                     factorHandler(val);
-                    resetFlag = false;
+                    showrate(factor, fp, context);
                   },
                   icon: Icon(Icons.keyboard_arrow_down),
                   iconEnabledColor: Colors.black,
@@ -84,59 +86,6 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                     );
                   }).toList(),
                 ),
-                RatingBar.builder(
-                  initialRating: 0,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: false,
-                  itemCount: 5,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) =>
-                      Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-
-                  onRatingUpdate: (rating) {
-                    int index = rating.toInt()-1;
-                      if(factor == 'All Factors')
-                      {
-                        fp.ratedFactors[index] += 14;
-                        allFactorsflag = false;
-                        return showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text(''),
-                            content: const Text('All Factors ratings are added'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    else if(allFactorsflag)
-                      {
-                        fp.ratedFactors[index] += 1;
-                        return showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text(''),
-                            content: const Text('Factor rating is added'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    print(fp.ratedFactors);
-                  },
-                ),
                 SizedBox(height: 40,),
                 //TCF Calculation Button
                 Container(
@@ -153,13 +102,12 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                       child: Text("Calculate TCF", style: TextStyle(fontSize: 20.0,color: Colors.blue),),
                       highlightedBorderColor: Colors.blue,
                       onPressed: () {
-                        setState(() {
-                          fp.tcf = fp.calculateTCF(fp.ratedFactors);
+                        fp.tcf = fp.calculateTCF(fp.ratedFactors);
                           return showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text(''),
-                              content: Text('Value of TCF is ${fp.tcf}'),
+                              content: Text('TCF value is ${fp.tcf}'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, 'OK'),
@@ -168,7 +116,6 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                               ],
                             ),
                           );
-                        });
                       },
                     ),
                   ),
@@ -179,8 +126,13 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                   alignment: Alignment.centerLeft,
                   child: Text('UFP value is: ${fp.ufp}' ,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                 ),
+                Container(
+                  padding: EdgeInsets.all(20.0),
+                  alignment: Alignment.centerLeft,
+                  child: Text('TCF value is: ${fp.tcf}' ,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                ),
 
-                SizedBox(height: 120,),
+                SizedBox(height: 90,),
                 //FP Calculation Button
                 Container(
                   alignment: Alignment.bottomCenter,
@@ -223,3 +175,37 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
     );
   }
 }
+
+void showrate(String factor,FunctionPoint fp,BuildContext context)
+{
+  bool allFactorsFlag = true;
+  showDialog(
+      context: context,
+      barrierDismissible: false, // set to false if you want to force a rating
+      builder: (context) {
+        return RatingDialog(
+          icon: const Icon(
+            Icons.flag,
+            size: 100,
+            color: Colors.blue,
+          ), // set your own image/icon widget
+          title: "Factor rating",
+          description: "Tap a star to give your rating.",
+          submitButton: "SUBMIT",
+          accentColor: Colors.blueGrey, // optional
+          onSubmitPressed: (int rating) {
+            int index = rating.toInt()-1;
+            if(factor == 'All Factors' && allFactorsFlag)
+            {
+              fp.ratedFactors[index] += 14;
+              allFactorsFlag = false;
+            }
+            else if(allFactorsFlag)
+            {
+              allFactorsFlag = false;
+              fp.ratedFactors[index] += 1;
+            }
+            },
+        );
+      });
+  }
