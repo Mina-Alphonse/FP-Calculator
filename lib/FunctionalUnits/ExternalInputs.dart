@@ -32,10 +32,6 @@ class _ExternalInputsState extends State<ExternalInputs> {
 
   @override
   Widget build(BuildContext context) {
-
-    print(fp.ufp);
-    print(fp.average);
-
     return Container(
         child: Column(children: [
           //External Inputs

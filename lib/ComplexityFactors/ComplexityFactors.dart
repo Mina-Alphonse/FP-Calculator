@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fp_calculator/AVCValues/AVC.dart';
 // import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import '../FunctionPoint.dart';
@@ -102,12 +103,14 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                       child: Text("Calculate TCF", style: TextStyle(fontSize: 20.0,color: Colors.blue),),
                       highlightedBorderColor: Colors.blue,
                       onPressed: () {
-                        fp.tcf = fp.calculateTCF(fp.ratedFactors);
+                        setState(() {
+                          FunctionPoint.tcf = fp.calculateTCF(fp.ratedFactors);
+                        });
                           return showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text(''),
-                              content: Text('TCF value is ${fp.tcf}'),
+                              content: Text('TCF value is ${FunctionPoint.tcf}'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, 'OK'),
@@ -124,12 +127,12 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                 Container(
                   padding: EdgeInsets.all(20.0),
                   alignment: Alignment.centerLeft,
-                  child: Text('UFP value is: ${fp.ufp}' ,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                  child: Text('UFP value is: ${FunctionPoint.ufp}' ,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                 ),
                 Container(
                   padding: EdgeInsets.all(20.0),
                   alignment: Alignment.centerLeft,
-                  child: Text('TCF value is: ${fp.tcf}' ,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                  child: Text('TCF value is: ${FunctionPoint.tcf}' ,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                 ),
 
                 SizedBox(height: 90,),
@@ -150,12 +153,16 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                       highlightedBorderColor: Colors.blue,
                       onPressed: () {
                         setState(() {
-                          fp.fp = fp.calculateFP();
+                          FunctionPoint.fp = fp.calculateFP();
+                        });
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AVC(fp: fp,)));
                           return showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text(''),
-                              content: Text('Value of FP is ${fp.fp}'),
+                              content: Text('Value of FP is ${FunctionPoint.fp}'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, 'OK'),
@@ -164,7 +171,6 @@ class _ComplexityFactorsState extends State<ComplexityFactors> {
                               ],
                             ),
                           );
-                        });
                       },
                     ),
                   ),

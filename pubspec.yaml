@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   flutter_rating_bar: ^3.0.1+1
   rating_dialog: ^1.0.0
+  google_fonts: ^1.1.2
 
 dev_dependencies:
   flutter_test:

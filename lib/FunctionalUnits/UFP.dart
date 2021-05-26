@@ -70,12 +70,16 @@ class _UFPState extends State<UFP> {
                     //      borderRadius: BorderRadius.circular(15)),
                     onPressed: () {
                       setState(() {
-                        fp.ufp = fp.calculateUFP(fp.simple, fp.average,fp.complex);
+                        FunctionPoint.ufp = fp.calculateUFP(fp.simple, fp.average,fp.complex);
+                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ComplexityFactors(fp: fp,)));
                         return showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
                             title: const Text(''),
-                            content: Text('Value of UFP is ${fp.ufp}'),
+                            content: Text('Value of UFP is ${FunctionPoint.ufp}'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -84,10 +88,6 @@ class _UFPState extends State<UFP> {
                             ],
                           ),
                         );
-                      });
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ComplexityFactors(fp: fp,)));
                     },
                   ),
                 ),

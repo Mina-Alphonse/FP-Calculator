@@ -1,7 +1,6 @@
 class FunctionPoint {
 
-  double tcf,fp ;
-  int ufp;
+  static double tcf,fp,ufp,avc;
 
   List<Map> functionUnits = [
       {'simple': 3, 'average': 4, 'complex': 6},
@@ -20,11 +19,11 @@ class FunctionPoint {
   Map factorRating = {'incidental':1, 'moderate':2, 'average':3, 'significant':4, 'essential':5};
   List<int> ratedFactors = [0,0,0,0,0];
 
-  int calculateUFP(List<int> simple ,List<int> average, List<int> complex){
+  double calculateUFP(List<int> simple ,List<int> average, List<int> complex){
 
-    int simpleElements = 0;
-    int averageElements = 0;
-    int complexElements = 0;
+    double simpleElements = 0;
+    double averageElements = 0;
+    double complexElements = 0;
 
     for(int i = 0; i < 5; i++)
       {
@@ -38,7 +37,7 @@ class FunctionPoint {
 
     for(int i = 0; i < 5; i++)
     {
-      complexElements = complex[i]*functionUnits[i]["complex"];
+      complexElements += complex[i]*functionUnits[i]["complex"];
     }
 
 
@@ -57,7 +56,11 @@ class FunctionPoint {
 
   double calculateFP()
   {
-    return tcf*ufp;
+    return ufp*tcf;
   }
 
+  double calculateLOC()
+  {
+    return avc*fp;
+  }
 }
